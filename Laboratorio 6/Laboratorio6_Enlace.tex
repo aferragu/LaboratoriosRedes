@@ -1,0 +1,125 @@
+\documentclass[a4paper,10pt]{article}
+
+\usepackage[margin=2cm, tmargin=1.5in, headheight=40px]{geometry}
+\usepackage[sfdefault, medium, light]{roboto}
+%\usepackage[nomap]{FiraMono}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{minted}
+\usepackage[svgnames]{xcolor}
+\setminted{style=default,bgcolor=Gainsboro}
+\usepackage[allcolors={DarkSlateBlue}, colorlinks]{hyperref}
+
+\fancyhf{}
+\fancyhead[L]{\includegraphics[height=35px]{../figuras/logoort.png}}
+\fancyhead[R]{Facultad de Ingeniería \\ Cátedra de Redes y Sistemas de Comunicación}
+\fancyfoot[R]{Página \thepage}
+\fancyfoot[L]{Redes de Datos -- Laboratorio 6}
+\renewcommand{\footrulewidth}{0.2pt}
+\renewcommand{\headrulewidth}{0.2pt}
+
+\pagestyle{fancy}
+
+
+\title{\bf Redes de Datos\\Laboratorio 6 -- Capa de Enlace}
+\author{\bf Universidad ORT Uruguay}
+\date{\bf Curso 2025}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{fancy}
+
+En este laboratorio trabajaremos a nivel de Capas de Red y de Enlace, utilizando los equipos Cisco disponibles en el Laboratorio.
+
+Los objetivos de este laboratorio son:
+
+\begin{itemize}
+    \item Observar el intercambio DHCP para lograr la auto-configuración de las interfaces de red en una LAN.
+    \item Lograr conectividad entre varias LAN a través de Routers y Switches.
+    \item Observar el comportamiento del protocolo ARP para mapear direcciones de capa de red en direcciones de capa de enlace.
+    \item Cómo se usan estas direcciones de capa de enlace para la comunicación local.
+\end{itemize}
+
+La topología base del laboratorio es la siguiente:
+
+\bigskip
+
+\begin{center}
+    \includegraphics[width=0.9\textwidth]{../figuras/topologia_lab6.png}
+\end{center}
+
+\section{Preparación}
+
+Antes de comenzar la práctica:
+
+\begin{enumerate}
+    \item Desactive la interfaz de red primaria de su PC. En esta práctica no utilizaremos el acceso a Internet.
+    \item Desactive el Firewall de Windows.
+    \item Conecte su PC del laboratorio a uno de los Switches indicado por el docente, utilizando la interfaz secundaria.
+    \item Verifique junto con los docentes que se han completado todas las conexiones necesarias.
+    \item Verifique que, en el sistema operativo de su PC, la interfaz secundaria aparece físicamente conectada, y que tiene DHCP (configuración automática de IP) activada.
+\end{enumerate}
+
+Al terminar esta parte, su PC no debería poder acceder aún a la red porque su capa de red aún no ha sido completamente configurada.
+
+\section{Protocolo DHCP}
+
+Para comenzar esta parte, el docente configurará un servidor DHCP en cada Router, para proveer asignación automática de direcciones en cada LAN.
+
+\begin{enumerate}
+    \item Comience a capturar paquetes en la interfaz de red utilizando Wireshark. ¿Logra ver un intercambio de autoconfiguración? Analice el mismo. Puede utilizar \mintinline{batch}{> ipconfig /renew} para forzar la configuración nuevamente.
+    \item Tome nota de la IP asignada a su computadora. ¿A qué rango pertenece? ¿Cómo la obtuvo? ¿Por cuánto tiempo dicha asignación es válida?
+    \item Realice una prueba de conectividad mediante \texttt{ping} a otra PC de su misma LAN. ¿Es exitoso?
+    \item Realice una prueba de conectividad mediante \texttt{ping} al Router de su LAN. ¿Es exitoso?
+    \item Realice una prueba de conectividad mediante \texttt{ping} a una PC de la LAN remota. ¿Es exitoso? ¿Qué más hace falta configurar para que la topología quede completamente conectada?
+\end{enumerate}
+
+Para finalizar esta parte, el docente completará la configuración de los Routers adecuada. Verifique que ahora sí tiene conectividad tanto dentro de su propia LAN como con las demás subredes de la topología.
+
+\bigskip
+\textbf{Preguntas adicionales para discutir:}
+
+\begin{itemize}
+    \item ¿Por qué es necesario un servidor DHCP para cada LAN, y no puede resolverse el problema con un único servidor DHCP global?
+    \item ¿Qué podría ocurrir si una PC configura de manera \emph{estática} una dirección que ya fue asignada a otra por DHCP?
+    \item ¿Cómo podría usar un servidor DHCP malicioso para interceptar el tráfico de los usuarios de una LAN?
+\end{itemize}
+
+\section{Protocolo ARP}
+
+Antes de comenzar esta parte, en una consola de su PC utilice el comando \mintinline{batch}{> arp -d} para borrar la tabla ARP de su PC. Puede chequear en cualquier momento el estado actual de la tabla con \mintinline{batch}{> arp -a}.
+
+\begin{enumerate}
+    \item Comience nuevamente a capturar tráfico en la interfaz de red.
+    \item Realice un \texttt{ping} al Router de su LAN. ¿Qué ocurre antes de que se envíe el paquete ICMP request? ¿Ocurre algo similar con el ICMP reply? ¿Por qué?
+    \item Realice un \texttt{ping} a otra PC cualquiera de su misma LAN.
+        \begin{enumerate}
+            \item ¿Logra ver un intercambio ARP? ¿Por qué es necesario esto?
+            \item Tome nota de las direcciones IP origen y destino de los paquetes, así como de las direcciones MAC origen y destino. ¿A qué dispositivos corresponden?
+        \end{enumerate}
+    \item Verifique el estado de la tabla ARP de su máquina al finalizar estos intercambios.
+    \item Realice un \texttt{ping} a otra PC cualquiera de la otra LAN.
+        \begin{enumerate}
+            \item ¿Logra ver un intercambio ARP? ¿Es necesario esto? Chequee si ya dispone de las MAC adecuadas en su tabla ARP.
+            \item Tome nota de las direcciones IP origen y destino de los paquetes, así como de las direcciones MAC origen y destino. ¿A qué dispositivos corresponden?
+            \item ¿Su PC requiere conocer la dirección MAC de la PC destino del \texttt{ping}?
+        \end{enumerate}
+\end{enumerate}
+
+\bigskip
+
+\textbf{Preguntas adicionales para discutir:}
+
+\begin{itemize}
+    \item ¿Cuál es el rol que cumplen las direcciones MAC, si ya existen las IP?
+    \item ¿Por qué los Switches no necesitan tener una dirección IP asignada?
+    \item ¿Los Switches tienen tabla ARP?
+    \item ¿Cómo saben los Switches a dónde deben redirigir los paquetes, si no poseen una tabla de rutas?
+\end{itemize}
+
+
+\end{document}
