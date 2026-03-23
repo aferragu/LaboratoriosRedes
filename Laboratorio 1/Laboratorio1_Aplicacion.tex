@@ -25,9 +25,9 @@
 \pagestyle{fancy}
 
 
-\title{\bf Redes de Datos\\Laboratorio 1 -- Capa de Aplicación}
+\title{\bf Redes \\Laboratorio 1 -- Capa de Aplicación}
 \author{\bf Universidad ORT Uruguay}
-\date{\bf Curso 2025}
+\date{\bf Curso 2026}
 
 \begin{document}
 
@@ -58,7 +58,7 @@ La VM se ejecuta usando el software de virtualización \href{https://www.virtual
 
 Una vez pronto el ambiente, en su equipo va a contar con un nuevo adaptador de red el cual servirá únicamente para la comunicación entre la máquina host y la VM. Dicha interfaz, de tipo VirtualBox Host Only Network proporciona una interfaz virtual de red con las siguientes direcciones:
 \begin{itemize}
-    \item IP Host: \texttt{192.168.56.1},
+    \item IP Host: \texttt{192.168.56.1}\footnote{Chequear esta IP en VirtualBox. En algunos sistemas operativos es diferente el rango.},
     \item IP VM (servidor): \texttt{192.168.56.2}.
 \end{itemize}
 Para visualizar el tráfico entre la máquina host y el servidor, podrá capturar paquetes utilizando Wireshark en esta interfaz virtual. A su vez, la VM cuenta también con otra interfaz de red a través de la cual se conecta a Internet.
@@ -71,7 +71,9 @@ Descargue en la máquina host los scripts de \texttt{python} de ejemplo que se p
     \item[Mac/Linux:] \texttt{python <script> \, <parámetros>}
 \end{description}
 
-\section*{Parte 1: Comunicación entre procesos}
+\section*{Trabajo en clase}
+
+\subsection*{Parte 1: Comunicación entre procesos}
 
 El objetivo de esta parte es ilustrar una comunicación básica entre procesos utilizando \emph{sockets}. El socket provee una abstracción de las capas inferiores permitiendo la comunicación. En nuestro caso utilizaremos sockets \emph{orientados a conexión} mediante el protocolo TCP.
 
@@ -108,7 +110,7 @@ Una vez creado el socket podemos utilizar:
     
 \end{enumerate}
 
-\section*{Parte 2: HTTP}
+\subsection*{Parte 2: HTTP}
 
 En esta parte intercambiaremos ahora mensajes con un servidor HTTP, mediante el protocolo visto en clase. El servidor está en la VM ya configurado y escucha en el puerto estándar de HTTP, 80. Capture el tráfico para ver los intercambios.
 
@@ -119,7 +121,23 @@ En esta parte intercambiaremos ahora mensajes con un servidor HTTP, mediante el 
     \item Utilizando la biblioteca de \texttt{python urllib} (ver Apéndice), modifique el script anterior para que reciba una URL como parámetro y realice el GET correspondiente via HTTP/1.1. Pruebe obtener una página remota.
 \end{enumerate}
 
-\section*{Parte 3: Envío de correo}
+\subsection*{Parte 3: SSH}
+
+En esta parte, exploraremos un protocolo seguro de consola remota: SSH (Secure SHell). Este protocolo encripta el tráfico entre cliente y servidor y escucha en el puerto 22.
+
+\begin{enumerate}
+    \item Capture el tráfico en la interfaz con la VM
+    \item Realice en la máquina host una conexión de consola remota mediante SSH utilizando un cliente adecuado, por ejemplo:
+     \begin{description}
+        \item[Windows] \texttt{putty.exe}.
+        \item[Mac, Linux] Ejecutar \texttt{ssh redes@192.168.56.2} en la consola.
+     \end{description}
+    \item Observe el tráfico capturado y vea cómo comienza a encriptarse al avanzar la comunicación.
+\end{enumerate}
+
+\section*{Trabajo domiciliario}
+
+\subsection*{Envío de correo}
 
 El protocolo SMTP de envío de correo visto en clase se diferencia de HTTP en que establece un \emph{diálogo} entre cliente y servidor para lograr el envío. Un ejemplo de diálogo simple SMTP puede verse en el material del curso.
 
@@ -138,7 +156,7 @@ En la VM está configurado un servidor SMTP (Postfix) escuchando en el puerto es
     \item ¿El servidor requiere autenticación? ¿Qué puede decir sobre la seguridad de este protocolo? 
 \end{enumerate}
 
-\section*{Parte 4: Lectura de correo}
+\subsection*{Lectura de correo}
 
 Para leer el correo de la parte anterior, se proporciona el script \texttt{simple\_pop3\_client.py} que implementa un cliente básico POP3, el protocolo más simple de lectura de correos. El servidor tiene instalado un servidor POP3 (Dovecot) escuchando en el puerto estándar 110.
 
@@ -148,19 +166,6 @@ Para leer el correo de la parte anterior, se proporciona el script \texttt{simpl
     \item Capture los paquetes para ver el intercambio realizado. En particular observe que el password va en texto plano por la red.
 \end{enumerate}
 
-\section*{Parte 5: SSH}
-
-En esta parte, exploraremos un protocolo seguro de consola remota: SSH (Secure SHell). Este protocolo encripta el tráfico entre cliente y servidor y escucha en el puerto 22.
-
-\begin{enumerate}
-    \item Capture el tráfico en la interfaz con la VM
-    \item Realice en la máquina host una conexión de consola remota mediante SSH utilizando un cliente adecuado, por ejemplo:
-     \begin{description}
-        \item[Windows] \texttt{putty.exe}.
-        \item[Mac, Linux] Ejecutar \texttt{ssh redes@192.168.56.2} en la consola.
-     \end{description}
-    \item Observe el tráfico capturado y vea cómo comienza a encriptarse al avanzar la comunicación.
-\end{enumerate}
 
 
 \appendix
