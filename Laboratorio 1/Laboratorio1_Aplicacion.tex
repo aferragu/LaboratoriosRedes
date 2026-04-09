@@ -52,13 +52,13 @@ Utilizaremos:
 La VM se ejecuta usando el software de virtualización \href{https://www.virtualbox.org/}{VirtualBox}. Se proporciona un archivo de tipo \texttt{.ova} que contiene la VM. Este servidor consiste en un Linux (Fedora 42 Server) con acceso por consola. El usuario administrador es \texttt{redes} con password \texttt{redes}, y dispone de otros usuarios de la forma \texttt{ort-grupo1}$\ldots$\texttt{ort-grupo4}, con password idéntico.
 
 \begin{enumerate}
-    \item Inicie VirtualBox e importe el servicio virtualizado \texttt{Servidor Redes 2025} del archivo \texttt{.ova}.
+    \item Inicie VirtualBox e importe el servicio virtualizado \texttt{Servidor Redes 2026} del archivo \texttt{.ova}.
     \item Inicie la VM en VirtualBox.
 \end{enumerate}
 
 Una vez pronto el ambiente, en su equipo va a contar con un nuevo adaptador de red el cual servirá únicamente para la comunicación entre la máquina host y la VM. Dicha interfaz, de tipo VirtualBox Host Only Network proporciona una interfaz virtual de red con las siguientes direcciones:
 \begin{itemize}
-    \item IP Host: \texttt{192.168.56.1}\footnote{Chequear esta IP en VirtualBox. En algunos sistemas operativos es diferente el rango.},
+    \item IP Host: \texttt{192.168.56.1},\footnote{Chequear esta IP en VirtualBox. En algunos sistemas operativos es diferente el rango.}
     \item IP VM (servidor): \texttt{192.168.56.2}.
 \end{itemize}
 Para visualizar el tráfico entre la máquina host y el servidor, podrá capturar paquetes utilizando Wireshark en esta interfaz virtual. A su vez, la VM cuenta también con otra interfaz de red a través de la cual se conecta a Internet.
