@@ -17,16 +17,16 @@
 \fancyhead[L]{\includegraphics[height=35px]{../figuras/logoort.png}}
 \fancyhead[R]{Facultad de Ingeniería \\ Cátedra de Redes y Sistemas de Comunicación}
 \fancyfoot[R]{Página \thepage}
-\fancyfoot[L]{Redes de Datos -- Laboratorio 3}
+\fancyfoot[L]{Redes -- Laboratorio 3}
 \renewcommand{\footrulewidth}{0.2pt}
 \renewcommand{\headrulewidth}{0.2pt}
 
 \pagestyle{fancy}
 
 
-\title{\bf Redes de Datos\\Laboratorio 3 -- Capa de Transporte}
+\title{\bf Redes\\Laboratorio 3 -- Capa de Transporte}
 \author{\bf Universidad ORT Uruguay}
-\date{\bf Curso 2025}
+\date{\bf Curso 2026}
 
 \begin{document}
 
@@ -45,7 +45,7 @@ Antes de comenzar la práctica deberá:
 \section{Análisis de mensajes y secuencia TCP}
 
 \begin{enumerate}
-    \item Inicie una captura de tráfico entre la máquina host y la VM servidor en la host-only network. Acceda mediante el navegador a la página del servidor \texttt{http://192.168.56.2}). Luego de obtenida la página, detenga la captura.
+    \item Inicie una captura de tráfico entre la máquina host y la VM servidor en la host-only network. Acceda mediante el navegador a la página del servidor (\texttt{http://192.168.56.2}). Luego de obtenida la página, detenga la captura.
     
     \item Identifique el establecimiento de conexión, quién inicia la misma, los números de secuencia (SEQ) inicial de ambas partes, los números de reconocimiento (ACK), el largo del segmento, como así también qué banderas van activas durante la secuencia de segmentos intercambiados.
     
@@ -63,19 +63,6 @@ Antes de comenzar la práctica deberá:
     
     \item Capture nuevamente e intente acceder ahora a la dirección del servidor pero en el puerto 443, utilizando la URL \texttt{http://192.168.56.2:443}. ¿Logra conectarse? ¿Por qué sucede esto? ¿Qué bandera se utiliza para señalizar esto?
 
-\end{enumerate}
-
-\section{Análisis de las conexiones activas}
-
-\begin{enumerate}
-    \item Ejecute el comando \texttt{netstat –na} desde una consola de Windows. Detalle brevemente la salida observada.
-    \item ¿Qué significan los estados ``ESTABLISHED'' y ``LISTENING'' que observa?.
-    \item ¿Describa además que significa el estado ``TIME-WAIT''.
-    \item Establezca una conexión Telnet al servidor en otra consola utilizando:
-    \begin{minted}{batch}
-> telnet 192.168.56.2
-    \end{minted}
-    y ejecute nuevamente el comando \texttt{netstat –na}. Observe la nueva conexión en la salida.
 \end{enumerate}
 
 \section{Throughput de una conexión TCP}
