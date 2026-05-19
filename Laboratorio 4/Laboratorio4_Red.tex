@@ -9,6 +9,7 @@
 \usepackage{graphicx}
 \usepackage{fancyhdr}
 \usepackage{minted}
+\usepackage{enumitem}
 \usepackage[svgnames]{xcolor}
 \setminted{style=default,bgcolor=Gainsboro}
 \usepackage[allcolors={DarkSlateBlue}, colorlinks]{hyperref}
@@ -17,48 +18,55 @@
 \fancyhead[L]{\includegraphics[height=35px]{../figuras/logoort.png}}
 \fancyhead[R]{Facultad de Ingeniería \\ Cátedra de Redes y Sistemas de Comunicación}
 \fancyfoot[R]{Página \thepage}
-\fancyfoot[L]{Redes de Datos -- Laboratorio 3}
+\fancyfoot[L]{Redes -- Laboratorio 4}
 \renewcommand{\footrulewidth}{0.2pt}
 \renewcommand{\headrulewidth}{0.2pt}
 
 \pagestyle{fancy}
 
 
-\title{\bf Redes de Datos\\Laboratorio 4 -- Capa de Red\\ Direccionamiento y ruteo estático}
+\title{\bf Redes\\Laboratorio 4 -- Capa de Red\\ Direccionamiento y ruteo estático}
 \author{\bf Universidad ORT Uruguay}
-\date{\bf Curso 2025}
+\date{\bf Curso 2026}
 
 \begin{document}
 
 \maketitle
 \thispagestyle{fancy}
 
-En este laboratorio trabajaremos a nivel de Capa de Red, utilizando equipos Cisco disponibles en el Laboratorio. Los objetivos son:
+En este laboratorio trabajaremos a nivel de Capa de Red, configurando de forma completa la asignación de direcciones y ruteo interno estático de una red de tipo empresarial. En particular los objetivos son:
 
 \begin{itemize}
     \item Realizar una asignación de direcciones de una topología dada.
     \item Configurar dicha asignación en los equipos, tanto routers como hosts, de manera de implementar la capa de red.
     \item Realizar la configuración de rutas estáticas para lograr conectividad en toda la topología.
+    \item Probar dicha conectividad mediante paquetes de prueba ICMP usando el comando \texttt{ping <IP destino>}.
 \end{itemize}
 
-Para ello, disponemos en el laboratorio de Routers pre-cableados en topología de anillo, utilizando enlaces \textbf{seriales} punto a punto. Los routers disponen además de interfaces \textbf{Ethernet} (FastEthernet o GigabitEthernet, según el modelo). Sin embargo, los routers inicialmente tienen todas sus interfaces apagadas y sin configurar.
+La práctica puede realizarse de dos maneras:
 
-La topología del laboratorio es la siguiente:
+\begin{enumerate}[label={\bf \alph*)}]
+    \item Utilizando los equipos Cisco disponibles en el laboratorio de Redes. Dichos Routers se encuentran pre-cableados en topología de anillo, utilizando enlaces \textbf{seriales} punto a punto. Los routers disponen además de interfaces \textbf{Ethernet} (FastEthernet o GigabitEthernet, según el modelo). Sin embargo, los routers inicialmente tienen todas sus interfaces apagadas y sin configurar (tal como vienen de fábrica). Disponemos de dos anillos de 4 Routers y uno de 3 Routers, así como Switches para implementar las redes locales.
+    
+    En este caso, cada grupo configurará un único Router, así como los equipos conectados directamente al mismo, poniéndose de acuerdo con los restantes equipos del mismo anillo cuál es la configuración correcta de modo de que la red quede coherentemente configurada.
 
-\bigskip
-
-\begin{center}
-    \includegraphics[width=0.85\textwidth]{../figuras/topologia_lab.png}
-\end{center}
-
-Durante la práctica, cada grupo se encargará de configurar \emph{un único router} y su LAN asociada. Sin embargo, debe coordinar con sus compañeros para que la asignación de direcciones y rutas sea \emph{coherente}.
-
-\vfill
+    \item Utilizando el simulador \href{https://www.gns3.com/}{\bf GNS3} que permite emular en una PC de escritorio una topología de red dada, creando máquinas virtuales que emulan el funcionamiento de los Routers y su sistema operativo. Se proveen en la página del curso archivos de tipo \emph{portable GNS3 project} con topologías similares a las de laboratorio. En este caso, el equipo deberá configurar \emph{toda la topología} para que quede funcionando.
+    
+\end{enumerate}
 
 \section{Asignación de direcciones}
 
-Realice una asignación de direcciones completa para las redes de área local de la figura, así como para los enlaces punto a punto entre routers, utilizando el rango provisto. Complete las siguientes tablas
-    
+\subsection{Topología de 4 routers}
+
+\begin{figure}
+    \begin{center}
+    \includegraphics[width=0.95\textwidth]{../figuras/topologia_lab.png}
+    \end{center}
+    \caption{Topología de Red de 4 routers con rangos a asignar.}\label{fig:topologia}
+\end{figure}
+
+Realice una asignación de direcciones completa para las redes de área local de la Figura \ref{fig:topologia}, así como para los enlaces punto a punto entre routers, utilizando el rango provisto. Complete las siguientes tablas
+
     \begin{center}
         \bigskip
         \begin{tabular}{|p{1cm}|p{3cm}|p{3cm}|p{3cm}|p{3cm}|}
@@ -76,25 +84,66 @@ Realice una asignación de direcciones completa para las redes de área local de
         \begin{tabular}{|p{2cm}|p{2.5cm}|p{2.5cm}|p{2.6cm}|p{2.4cm}|p{2.4cm}|}
             \hline
             \textbf{Enlace} & \textbf{Dirección de red} & \textbf{Máscara} & \textbf{Dir. de broadcast} & \textbf{IP Router A} & \textbf{IP Router B} \\ \hline
-            \textbf{RTR1--RTR2} & & & & & \\ \hline
-            \textbf{RTR2--RTR3} & & & & & \\ \hline
-            \textbf{RTR3--RTR4} & & & & & \\ \hline
-            \textbf{RTR4--RTR1} & & & & & \\ \hline
+            \textbf{RTRA--RTRB} & & & & & \\ \hline
+            \textbf{RTRA--RTRC} & & & & & \\ \hline
+            \textbf{RTRB--RTRD} & & & & & \\ \hline
+            \textbf{RTRC--RTRD} & & & & & \\ \hline
         \end{tabular}
     \bigskip
     \end{center}
 
-    Comparta la asignación realizada con el resto de los grupos de su topología de modo de llegar a una asignación coherente.
+\subsection{Topología de 3 routers}
 
-\section{Configuración de interfaces en los routers}
+    Modifique ahora la asignación anterior para el caso en que hay solo 3 routers, asumiendo que la LAN D y la LAN B son una única LAN con 120 hosts.
 
-Para conectarse a los routers, debe accederse a los mismos mediante su \emph{consola de configuración}. Típicamente esto se realiza mediante un cable dedicado y una conexión serial. Para simplificar este proceso, en el laboratorio se dispone de un equipo Cisco remotizador de consolas. Para acceder al Router RTRX, se debe ingresar via \texttt{telnet} al remotizador, y luego acceder a la consola del Router deseado mediante:
+        \begin{center}
+        \bigskip
+        \begin{tabular}{|p{1cm}|p{3cm}|p{3cm}|p{3cm}|p{3cm}|}
+            \hline
+            \textbf{Red} & \textbf{Dirección de red} & \textbf{Máscara} & \textbf{Dir. de broadcast} & \textbf{IP Router} \\ \hline
+            \textbf{LAN A} & & & & \\ \hline
+            \textbf{LAN B} & & & & \\ \hline
+            \textbf{LAN C} & & & & \\ \hline
+        \end{tabular}
+    \end{center}
+
+    \bigskip
+    \begin{center}
+        \begin{tabular}{|p{2cm}|p{2.5cm}|p{2.5cm}|p{2.6cm}|p{2.4cm}|p{2.4cm}|}
+            \hline
+            \textbf{Enlace} & \textbf{Dirección de red} & \textbf{Máscara} & \textbf{Dir. de broadcast} & \textbf{IP Router A} & \textbf{IP Router B} \\ \hline
+            \textbf{RTRA--RTRB} & & & & & \\ \hline
+            \textbf{RTRA--RTRC} & & & & & \\ \hline
+            \textbf{RTRB--RTRC} & & & & & \\ \hline
+        \end{tabular}
+    \bigskip
+    \end{center}
+
+
+\textbf{Nota:} antes de continuar, si está trabajando con los equipos del laboratorio, comparta la asignación realizada con el resto de los grupos de su topología de modo de llegar a una asignación coherente. Compare en particular \textbf{cuál es su número de router y cuáles son sus interfaces} con el \textbf{esquema de conexión} disponible en el rack del laboratorio.
+
+
+\section{Acceso a la consola de configuración}
+
+Para conectarse a los routers, debe accederse a los mismos mediante su \emph{consola de configuración}. Típicamente esto se realiza mediante un cable dedicado y una conexión serial, que permite comunicarse con el sistema operativo del Router.
+
+\begin{enumerate}[label={\bf \alph*)}]
+\item En el caso de los equipos de laboratorio, para simplificar este proceso, se dispone de un equipo Cisco remotizador de consolas. Para acceder al Router RTRX, se debe ingresar via \texttt{telnet} al remotizador, y luego acceder a la consola del Router deseado mediante:
 \begin{minted}{batch}
 > telnet 172.20.20.24
 > Login: grupoX
 > Password: ort
 \end{minted}
 donde X es el no. de router.
+
+\item En el caso de \textbf{GNS3}, luego de importar el projecto portable, aparecen toda la topología ya conectada, incluyendo Routers y PC virtuales. En este caso se debe:
+ \begin{enumerate}[label=\arabic*.]
+    \item Iniciar la simulación los equipos (ícono de Play).
+    \item Hacer click-derecho y abrir una consola al equipo que se desea configurar.
+ \end{enumerate}
+\end{enumerate}
+
+\section{Configuración de interfaces de los routers}
 
 \begin{enumerate}
     \item Configure las interfaces del Router siguiendo la asignación elegida. Tenga presente el nombre de las interfaces que los conectan con Routers vecinos, disponibles en el rack del laboratorio. Puede ayudarse de los comandos en el apéndice.
@@ -107,7 +156,7 @@ donde X es el no. de router.
 
 \begin{enumerate}
     \item Implemente la red local conectando un Switch a la interfaz Ethernet del router. Verifique que ahora la misma queda activa.
-    \item Conecte su máquina del laboratorio a dicha red mediante un patch-cord adecuado, utilizando la tarjeta de red secundaria de la máquina.
+    \item Si está trabajando en el laboratorio, conecte su máquina del laboratorio a dicha red mediante un patch-cord adecuado, utilizando la tarjeta de red secundaria de la máquina.
     \item Configure la dirección IP, máscara y puerta de enlace predeterminada de su máquina para que quede conectada a la LAN adecuada.
     \item Chequee conectividad con el Router mediante \texttt{ping}. ¿Puede llegar más allá?
 \end{enumerate}
@@ -142,6 +191,17 @@ donde X es el no. de router.
     \item Asignar IP de broadcast: \mintinline{batch}{RTRX(config-if)# ip broadcast-address <IP>}
     \item Crear una ruta estática: \mintinline{batch}{RTRX(config)# ip route <dir. Red> <máscara> <nextHop>}
     \item Salir de un submenú: \mintinline{batch}{RTRX(config)# exit}
-
+    \item Realizar un \texttt{ping}: \mintinline{batch}{RTRX# ping <IP_destino>}
 \end{itemize}
+
+\section{Comandos GNS3 virtual PCs}
+
+\begin{itemize}
+    \item Configurar la IP de una PC:
+\mintinline{batch}{PC_X> ip <direccion> <mascara> <ruta_por_defecto>}
+    \item Mostrar la configuración actual:
+    \mintinline{batch}{PC_X> show ip}
+    \item Realizar un \texttt{ping}: \mintinline{batch}{PC_X> ping <IP_destino>}
+\end{itemize}
+
 \end{document}
