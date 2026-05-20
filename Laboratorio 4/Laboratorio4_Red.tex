@@ -136,9 +136,9 @@ Para conectarse a los routers, debe accederse a los mismos mediante su \emph{con
 \end{minted}
 donde X es el no. de router.
 
-\item En el caso de \textbf{GNS3}, luego de importar el projecto portable, aparecen toda la topología ya conectada, incluyendo Routers y PC virtuales. En este caso se debe:
+\item En el caso de \textbf{GNS3}, luego de importar el proyecto portable, aparecen toda la topología ya conectada, incluyendo Routers y PC virtuales. En este caso se debe:
  \begin{enumerate}[label=\arabic*.]
-    \item Iniciar la simulación los equipos (ícono de Play).
+    \item Iniciar la simulación de los equipos (ícono de Play).
     \item Hacer click-derecho y abrir una consola al equipo que se desea configurar.
  \end{enumerate}
 \end{enumerate}
@@ -146,7 +146,7 @@ donde X es el no. de router.
 \section{Configuración de interfaces de los routers}
 
 \begin{enumerate}
-    \item Configure las interfaces del Router siguiendo la asignación elegida. Tenga presente el nombre de las interfaces que los conectan con Routers vecinos, disponibles en el rack del laboratorio. Puede ayudarse de los comandos en el apéndice.
+    \item Configure las interfaces del Router siguiendo la asignación elegida. \textbf{Tenga presente el nombre exacto} de las interfaces que los conectan con Routers vecinos. Puede ayudarse de los comandos en el apéndice.
     \item Verifique el estado de las interfaces mediante el comando \texttt{show ip interface brief}.
     \item Verifique el estado inicial de la tabla de rutas mediante el comando \texttt{show ip route}.
     \item Verifique conectividad a los routers directamente conectados mediante el comando \texttt{ping <IP>}.
@@ -164,8 +164,8 @@ donde X es el no. de router.
 \section{Implementación de rutas estáticas}
 
 \begin{enumerate}
-    \item Configure las rutas estáticas adecuadas en su router para que toda la red sea alcanzable.
-    \item Si ud. configura su Router, pero los vecinos aún no, ¿enviar un \texttt{ping} entre dos hosts será posible? ¿Por qué?
+    \item Configure las rutas estáticas adecuadas en un router para que toda la red sea alcanzable.
+    \item Si se configura un Router, pero los vecinos aún no, ¿enviar un \texttt{ping} entre dos hosts será posible? ¿Por qué?
     \item Una vez configurada toda la topología, verifique conectividad a toda la red.
 \end{enumerate}
 
