@@ -74,10 +74,10 @@ En esta parte, configuraremos al Router RTR1 para que actúe como servidor DHCP 
     \begin{minted}{batch}
     RTR1# configure terminal
     RTR1(config)# ip dhcp pool LAN
-    RTR1(dhcp-config)# network 192.168.1.0 255.255.255.0
-    RTR1(dhcp-config)# default-router 192.168.1.1
+    RTR1(dhcp-config)# network 192.168.100.0 255.255.255.0
+    RTR1(dhcp-config)# default-router 192.168.100.1
     RTR1(dhcp-config)# exit
-    RTR1(config)# ip dhcp excluded-address 192.168.1.1
+    RTR1(config)# ip dhcp excluded-address 192.168.100.1
     \end{minted}
 
     Esta configuración le permite al router contestar pedidos DHCP en un pool de direcciones llamado LAN, en la red indicada. Además indica que él es el default-router de la red, por lo que las PCs tendrán una ruta por defecto en la autoconfiguración. Finalmente, se excluye la IP propia del pool.
