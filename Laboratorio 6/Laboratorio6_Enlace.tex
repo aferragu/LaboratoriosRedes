@@ -17,23 +17,23 @@
 \fancyhead[L]{\includegraphics[height=35px]{../figuras/logoort.png}}
 \fancyhead[R]{Facultad de Ingeniería \\ Cátedra de Redes y Sistemas de Comunicación}
 \fancyfoot[R]{Página \thepage}
-\fancyfoot[L]{Redes de Datos -- Laboratorio 6}
+\fancyfoot[L]{Redes -- Laboratorio 6}
 \renewcommand{\footrulewidth}{0.2pt}
 \renewcommand{\headrulewidth}{0.2pt}
 
 \pagestyle{fancy}
 
 
-\title{\bf Redes de Datos\\Laboratorio 6 -- Capa de Enlace}
+\title{\bf Redes\\Laboratorio 6 -- Capa de Enlace}
 \author{\bf Universidad ORT Uruguay}
-\date{\bf Curso 2025}
+\date{\bf Curso 2026}
 
 \begin{document}
 
 \maketitle
 \thispagestyle{fancy}
 
-En este laboratorio trabajaremos a nivel de Capas de Red y de Enlace, utilizando los equipos Cisco disponibles en el Laboratorio.
+En este laboratorio trabajaremos a nivel de Capas de Red y de Enlace, utilizando una topología de Red definida en el simulador GNS3. La idea es que la topología simula una red de acceso conformada por una LAN con varios switches y PC y un servidor alojado en una red remota.
 
 Los objetivos de este laboratorio son:
 
@@ -57,28 +57,44 @@ La topología base del laboratorio es la siguiente:
 Antes de comenzar la práctica:
 
 \begin{enumerate}
-    \item Desactive la interfaz de red primaria de su PC. En esta práctica no utilizaremos el acceso a Internet.
-    \item Desactive el Firewall de Windows.
-    \item Conecte su PC del laboratorio a uno de los Switches indicado por el docente, utilizando la interfaz secundaria.
-    \item Verifique junto con los docentes que se han completado todas las conexiones necesarias.
-    \item Verifique que, en el sistema operativo de su PC, la interfaz secundaria aparece físicamente conectada, y que tiene DHCP (configuración automática de IP) activada.
+    \item Importe el proyecto portable GNS3 \texttt{topologia-lab-6.gns3project}.
+    \item Inicie la simulación encendiendo todos los equipos.
+    \item Verifique con \mintinline{batch}{# show ip interface brief} y \mintinline{batch}{# show ip route} que los routers están adecuadamente configurados, tienen las rutas correctas y las interfaces levantadas. Pruebe hacer \texttt{ping} entre ellos.
+    \item Ingrese a una consola del Servidor y verifique que tiene su ip asignadda con \mintinline{batch}{Servidor> show ip}. Pruebe hacer \texttt{ping} a los routers.
 \end{enumerate}
 
-Al terminar esta parte, su PC no debería poder acceder aún a la red porque su capa de red aún no ha sido completamente configurada.
+Al terminar esta parte, los PCs no tienen su capa de red configurada y no pueden acceder a la red.
 
 \section{Protocolo DHCP}
 
-Para comenzar esta parte, el docente configurará un servidor DHCP en cada Router, para proveer asignación automática de direcciones en cada LAN.
+En esta parte, configuraremos al Router RTR1 para que actúe como servidor DHCP de la LAN.
 
 \begin{enumerate}
-    \item Comience a capturar paquetes en la interfaz de red utilizando Wireshark. ¿Logra ver un intercambio de autoconfiguración? Analice el mismo. Puede utilizar \mintinline{batch}{> ipconfig /renew} para forzar la configuración nuevamente.
-    \item Tome nota de la IP asignada a su computadora. ¿A qué rango pertenece? ¿Cómo la obtuvo? ¿Por cuánto tiempo dicha asignación es válida?
+    \item Inicie una consola al router RTR1 e introduzca la siguiente configuración:
+    \begin{minted}{batch}
+    RTR1# configure terminal
+    RTR1(config)# ip dhcp pool LAN
+    RTR1(dhcp-config)# network 192.168.1.0 255.255.255.0
+    RTR1(dhcp-config)# default-router 192.168.1.1
+    RTR1(dhcp-config)# exit
+    RTR1(config)# ip dhcp excluded-address 192.168.1.1
+    \end{minted}
+
+    Esta configuración le permite al router contestar pedidos DHCP en un pool de direcciones llamado LAN, en la red indicada. Además indica que él es el default-router de la red, por lo que las PCs tendrán una ruta por defecto en la autoconfiguración. Finalmente, se excluye la IP propia del pool.
+
+    \item Comience a capturar paquetes en la interfaz HostA - Switch1 utilizando Wireshark (click derecho en el link y comenzar captura).
+    \item Inicie una consola a la PC HostA y habilite la autoconfiguración DHCP utilizando \mintinline{batch}{HostA> ip dhcp}
+    \begin{enumerate}
+     \item ¿Logra ver un intercambio de autoconfiguración en la captura? Analice el mismo.
+     \item ¿La IP asignada es válida para el rango? Tome nota de su valor y por cuánto tiempo es válida.
+     \item Verifique en el HostA con \mintinline{batch}{HostA> show ip} que el host quedó correctamente configurado.
+     \item ¿Puede hacer ping al servidor ahora?
+    \end{enumerate}
+
+    \item Repita los pasos anteriores de configuración para los HostB y HostC, y tome nota de las IP asignadas a cada uno.
     \item Realice una prueba de conectividad mediante \texttt{ping} a otra PC de su misma LAN. ¿Es exitoso?
     \item Realice una prueba de conectividad mediante \texttt{ping} al Router de su LAN. ¿Es exitoso?
-    \item Realice una prueba de conectividad mediante \texttt{ping} a una PC de la LAN remota. ¿Es exitoso? ¿Qué más hace falta configurar para que la topología quede completamente conectada?
 \end{enumerate}
-
-Para finalizar esta parte, el docente completará la configuración de los Routers adecuada. Verifique que ahora sí tiene conectividad tanto dentro de su propia LAN como con las demás subredes de la topología.
 
 \bigskip
 \textbf{Preguntas adicionales para discutir:}
@@ -91,10 +107,10 @@ Para finalizar esta parte, el docente completará la configuración de los Route
 
 \section{Protocolo ARP}
 
-Antes de comenzar esta parte, en una consola de su PC utilice el comando \mintinline{batch}{> arp -d} para borrar la tabla ARP de su PC. Puede chequear en cualquier momento el estado actual de la tabla con \mintinline{batch}{> arp -a}.
+Antes de comenzar esta parte, en la consola de las PCs utilice el comando \mintinline{batch}{HostA> clear arp} para borrar la tabla ARP. Puede chequear en cualquier momento el estado actual de la tabla con \mintinline{batch}{> show arp}.
 
 \begin{enumerate}
-    \item Comience nuevamente a capturar tráfico en la interfaz de red.
+    \item Comience nuevamente a capturar tráfico en la interfaz de red del HostA.
     \item Realice un \texttt{ping} al Router de su LAN. ¿Qué ocurre antes de que se envíe el paquete ICMP request? ¿Ocurre algo similar con el ICMP reply? ¿Por qué?
     \item Realice un \texttt{ping} a otra PC cualquiera de su misma LAN.
         \begin{enumerate}
